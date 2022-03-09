@@ -42,5 +42,59 @@ def pixel_demo():
     cv.destroyAllWindows()
 
 
+def math_demo():
+    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
+    cv.imshow("input", image)
+    blank = np.zeros_like(image)
+    blank[:, :] = (10, 10, 10)  # 为blank图像像素的通道赋值
+    cv.imshow("blank", blank)
+    result = cv.add(image, blank)  # 相加
+    result = cv.subtract(image, blank)  # 相减
+    result = cv.multiply(image, blank)  # 相乘
+    result = cv.divide(image, blank)  # 相除
+    cv.imshow("result", result)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
+def print_value(a):
+    print(a)
+
+
+def adjust_lightness_demo():
+    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
+    cv.namedWindow("input",
+                   cv.WINDOW_AUTOSIZE)  # 创建窗口 (窗口名，窗口大小自适应图片大小并且不能更改） WINDOW_NORMAL 用户可以改变这个窗口大小，WINDOW_OPENGL 窗口创建的时候会支持OpenGL
+    cv.createTrackbar("lightness", "input", 0, 255, print_value)  # 创建滚动条 （滚动条名字，滚动条属于的窗口名字，滚动条取值范围，回调函数）
+    cv.imshow("input", image)
+    blank = np.zeros_like(image)
+    while True:
+        pos = cv.getTrackbarPos("lightness", "input")  # 获取当前滚动条的值
+        blank[:, :] = (pos, pos, pos)
+        result = cv.add(image, blank)
+        cv.imshow("result", result)
+        c = cv.waitKey(1)  # 等待用户触发事件时间
+        if c == 27:  # 如果按下ESC（ASCII码为27）
+            cv.destroyAllWindows()
+
+
+def adjust_contrast_demo():
+    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
+    cv.namedWindow("input",cv.WINDOW_AUTOSIZE)  # 创建窗口 (窗口名，窗口大小自适应图片大小并且不能更改）
+    cv.createTrackbar("lightness", "input", 0, 255, print_value)  # 创建滚动条 （滚动条名字，滚动条属于的窗口名字，滚动条取值范围，回调函数）
+    cv.createTrackbar("contrast", "input", 0, 255, print_value)  # 创建滚动条 （滚动条名字，滚动条属于的窗口名字，滚动条取值范围，回调函数）
+    cv.imshow("input", image)
+    blank = np.zeros_like(image)
+    while True:
+        light = cv.getTrackbarPos("lightness", "input")  # 获取当前滚动条的值
+        contrast = cv.getTrackbarPos("contrast", "input")/100   # 获取当前滚动条的值
+        print("light:", light, ",contrast:", contrast)
+        result = cv.addWeighted(image, contrast, blank, 0, light)  # 对两张图片进行不同权重合并
+        cv.imshow("result", result)
+        c = cv.waitKey(1)  # 等待用户触发事件时间
+        if c == 27:  # 如果按下ESC（ASCII码为27）
+            cv.destroyAllWindows()
+
+
 if __name__ == "__main__":
-    pixel_demo()
+    adjust_contrast_demo()
