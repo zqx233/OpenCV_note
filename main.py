@@ -3,7 +3,7 @@ import numpy as np
 
 
 def read_demo():
-    image = cv.imread("D:/Code/1.jpg")  # 读取图片，对于OpenCV来说，RGB通道的图片读取到的色彩空间为BGR通道
+    image = cv.imread("src/1.jpg")  # 读取图片，对于OpenCV来说，RGB通道的图片读取到的色彩空间为BGR通道
     gary = cv.cvtColor(image, cv.COLOR_BGR2GRAY)  # 转换为灰度
     hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)  # 转换为hsv
     hsv = cv.cvtColor(image, cv.COLOR_HSV2BGR)  # hsv转换为BGR，H通道范围为0-180，其余为0-255
@@ -14,7 +14,7 @@ def read_demo():
 
 
 def mat_demo():
-    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
+    image = cv.imread("src/1.jpg")  # (666, 999, 3)
     print(image.shape)  # 输出图片的高，宽，通道 h, w, c
     roi = image[60:200, 50:100, :]  # 将图片一部分区域设置为roi区域
     blank = np.zeros_like(image)  # 创建一个和图片一样大小的空白图片
@@ -30,7 +30,7 @@ def mat_demo():
 
 
 def pixel_demo():
-    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
+    image = cv.imread("src/1.jpg")  # (666, 999, 3)
     cv.imshow("image", image)
     h, w, c = image.shape
     for row in range(h):
@@ -43,7 +43,7 @@ def pixel_demo():
 
 
 def math_demo():
-    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
+    image = cv.imread("src/1.jpg")  # (666, 999, 3)
     cv.imshow("input", image)
     blank = np.zeros_like(image)
     blank[:, :] = (10, 10, 10)  # 为blank图像像素的通道赋值
@@ -62,7 +62,7 @@ def print_value(a):
 
 
 def adjust_lightness_demo():
-    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
+    image = cv.imread("src/1.jpg")  # (666, 999, 3)
     cv.namedWindow("input",
                    cv.WINDOW_AUTOSIZE)  # 创建窗口 (窗口名，窗口大小自适应图片大小并且不能更改） WINDOW_NORMAL 用户可以改变这个窗口大小，WINDOW_OPENGL 窗口创建的时候会支持OpenGL
     cv.createTrackbar("lightness", "input", 0, 255, print_value)  # 创建滚动条 （滚动条名字，滚动条属于的窗口名字，滚动条取值范围，回调函数）
@@ -79,15 +79,15 @@ def adjust_lightness_demo():
 
 
 def adjust_contrast_demo():
-    image = cv.imread("D:/Code/1.jpg")  # (666, 999, 3)
-    cv.namedWindow("input",cv.WINDOW_AUTOSIZE)  # 创建窗口 (窗口名，窗口大小自适应图片大小并且不能更改）
+    image = cv.imread("src/1.jpg")  # (666, 999, 3)
+    cv.namedWindow("input", cv.WINDOW_AUTOSIZE)  # 创建窗口 (窗口名，窗口大小自适应图片大小并且不能更改）
     cv.createTrackbar("lightness", "input", 0, 255, print_value)  # 创建滚动条 （滚动条名字，滚动条属于的窗口名字，滚动条取值范围，回调函数）
     cv.createTrackbar("contrast", "input", 0, 255, print_value)  # 创建滚动条 （滚动条名字，滚动条属于的窗口名字，滚动条取值范围，回调函数）
     cv.imshow("input", image)
     blank = np.zeros_like(image)
     while True:
         light = cv.getTrackbarPos("lightness", "input")  # 获取当前滚动条的值
-        contrast = cv.getTrackbarPos("contrast", "input")/100   # 获取当前滚动条的值
+        contrast = cv.getTrackbarPos("contrast", "input") / 100  # 获取当前滚动条的值
         print("light:", light, ",contrast:", contrast)
         result = cv.addWeighted(image, contrast, blank, 0, light)  # 对两张图片进行不同权重合并
         cv.imshow("result", result)
@@ -96,5 +96,122 @@ def adjust_contrast_demo():
             cv.destroyAllWindows()
 
 
+def keys_demo():
+    image = cv.imread("src/1.jpg")  # (666, 999, 3)
+    cv.namedWindow("input", cv.WINDOW_AUTOSIZE)  # 创建窗口 (窗口名，窗口大小自适应图片大小并且不能更改）
+    cv.imshow("input", image)
+    while True:
+        c = cv.waitKey(1)  # 等待用户触发事件时间
+        if c == 49:  # 按键1
+            gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+            cv.imshow("result", gray)
+        if c == 50:  # 按键2
+            hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
+            cv.imshow("result", hsv)
+        if c == 27:  # 如果按下ESC（ASCII码为27）
+            cv.destroyAllWindows()
+
+
+def color_table_demo():
+    colormap = [
+        cv.COLORMAP_AUTUMN,
+        cv.COLORMAP_BONE,
+        cv.COLORMAP_JET,
+        cv.COLORMAP_WINTER,
+        cv.COLORMAP_RAINBOW,
+        cv.COLORMAP_OCEAN,
+        cv.COLORMAP_SUMMER,
+        cv.COLORMAP_SPRING,
+        cv.COLORMAP_COOL,
+        cv.COLORMAP_PINK,
+        cv.COLORMAP_HOT,
+        cv.COLORMAP_PARULA,
+        cv.COLORMAP_MAGMA,
+        cv.COLORMAP_INFERNO,
+        cv.COLORMAP_PLASMA,
+        cv.COLORMAP_VIRIDIS,
+        cv.COLORMAP_CIVIDIS,
+        cv.COLORMAP_TWILIGHT,
+        cv.COLORMAP_TWILIGHT_SHIFTED]
+    image = cv.imread("src/1.jpg")  # (666, 999, 3)
+    cv.namedWindow("input", cv.WINDOW_AUTOSIZE)  # 创建窗口 (窗口名，窗口大小自适应图片大小并且不能更改）
+    cv.imshow("input", image)
+    index = 0
+    while True:
+        dst = cv.applyColorMap(image, colormap[index % 19])
+        index += 1
+        cv.imshow("result", dst)
+        c = cv.waitKey(2000)  # 等待用户触发事件时间
+        if c == 27:  # 如果按下ESC（ASCII码为27）
+            break
+    cv.destroyAllWindows()
+
+
+def bitwise_demo():
+    b1 = np.zeros((400, 400, 3), dtype=np.uint8)
+    b1[:, :] = (255, 0, 255)
+    b2 = np.zeros((400, 400, 3), dtype=np.uint8)
+    b2[:, :] = (0, 255, 255)
+    cv.imshow("b1", b1)
+    cv.imshow("b2", b2)
+    dst1 = cv.bitwise_and(b1, b2)  # 与运算
+    dst2 = cv.bitwise_or(b1, b2)  # 或运算
+    cv.imshow("bitwise_and", dst1)
+    cv.imshow("bitwise_or", dst2)
+    cv.waitKey(0)
+
+
+def channels_split_demo():
+    b1 = cv.imread("src/1.jpg")
+    print(b1.shape)
+    cv.imshow("input", b1)
+    cv.imshow("b1", b1[:, :, 2])
+    mv = cv.split(b1)
+    mv[0][:, :] = 255  # 将第一通道的值都改为255
+    result = cv.merge(mv)  # 将第一通道合并到图像中
+    cv.imshow("result", result)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
+def color_space_demo():
+    b1 = cv.imread("src/1.jpg")
+    print(b1.shape)
+    cv.imshow("input", b1)
+    hsv = cv.cvtColor(b1, cv.COLOR_BGR2HSV)
+    print(hsv)
+    cv.imshow("hsv", hsv)
+    mask = cv.inRange(hsv, (0, 30, 46), (25, 255, 255))  # 将图像中颜色在第二个参数和第三个参数范围内的颜色设为0，其余为1
+    # cv.bitwise_not(mask, mask)  # 自身取反
+    result = cv.bitwise_and(b1, b1, mask=mask)  # mask：指定操作范围
+    cv.imshow("mask", mask)
+    cv.imshow("result", result)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
+def pixel_stat_demo():
+    # b1 = cv.imread("src/1.jpg")
+    b1 = np.zeros((512, 512, 3), dtype=np.uint8)
+    print(b1.shape)
+    cv.imshow("input", b1)
+    means, dev = cv.meanStdDev(b1)  # 均值，方差
+    print("means:", means, "dev:", dev)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
+def drawing_demo():
+    b1 = np.zeros((512, 512, 3), dtype=np.uint8)
+    cv.rectangle(b1, (50, 50), (400, 400), (0, 0, 255), 2, 8, 0)
+    cv.circle(b1, (225, 225), 175, (255, 0, 0), -1, 8, 0)
+    cv.line(b1, (50, 50), (400, 400), (0, 255, 0), 2, 8, 0)
+    # b1[:,:] = 0
+    cv.putText(b1, "This is a text", (50, 50), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2, 8)
+    cv.imshow("result", b1)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
 if __name__ == "__main__":
-    adjust_contrast_demo()
+    drawing_demo()
