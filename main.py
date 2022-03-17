@@ -213,5 +213,84 @@ def drawing_demo():
     cv.destroyAllWindows()
 
 
+def random_color_demo():
+    b1 = np.zeros((512, 512, 3), dtype=np.uint8)
+    while True:
+        xx = np.random.randint(0, 512, 2, dtype=np.int)
+        yy = np.random.randint(0, 512, 2, dtype=np.int)
+        bgr = np.random.randint(0, 255, 3, dtype=np.int32)
+        cv.line(b1, (xx[0], yy[0]), (xx[1], yy[1]), (np.int(bgr[0]), np.int(bgr[1]), np.int(bgr[2])), 1, 8, 0)
+        cv.imshow("result", b1)
+        c = cv.waitKey(1)
+        if c == 27:
+            break
+    cv.destroyAllWindows()
+
+
+def polyline_drawing_demo():
+    canvas = np.zeros((512, 512, 3), dtype=np.uint8)
+    pts = np.array([[100, 100], [300, 100], [450, 200], [320, 450], [80, 400]])
+    # cv.fillPoly(canvas, [pts], (255, 0, 255), 8, 0)
+    # cv.polylines(canvas, [pts], True, (0, 0, 255), 2, 8, 0)
+    cv.drawContours(canvas, [pts], 1, (255, 0, 0), -1)  # 可实现前两个函数功能，最后一个参数为-1时填充，正数时不填充
+    cv.imshow("polyline", canvas)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
+b1 = cv.imread("D:/Code/py/OpenCV/src/1.jpg")
+img = np.copy(b1)
+x1 = -1
+x2 = -1
+y1 = -1
+y2 = -1
+
+
+def mouse_drawing(event, x, y, flags, param):
+    global x1, x2, y1, y2
+    if event == cv.EVENT_LBUTTONDOWN:
+        x1 = x
+        y1 = y
+    if event == cv.EVENT_MOUSEMOVE:
+        if x1 < 0 or y1 < 0:
+            return
+        x2 = x
+        y2 = y
+        b1[:, :, :] = img[:, :, :]
+        cv.rectangle(b1, (x1, y1), (x2, y2), (0, 0, 255), 2, 8, 0)
+    if event == cv.EVENT_LBUTTONUP:
+        if x1 < 0 or y1 < 0:
+            return
+        x2 = x
+        y2 = y
+        b1[:, :, :] = img[:, :, :]
+        cv.rectangle(b1, (x1, y1), (x2, y2), (0, 0, 255), 2, 8, 0)
+        x1 = -1
+        x2 = -1
+        y1 = -1
+        y2 = -1
+
+
+def mouse_demo():
+    cv.namedWindow("mouse_demo", cv.WINDOW_AUTOSIZE)
+    cv.setMouseCallback("mouse_demo", mouse_drawing)
+    while True:
+        cv.imshow("mouse_demo", b1)
+        c = cv.waitKey(1)
+        if c == 27:
+            break
+    cv.destroyAllWindows()
+
+
+def norm_demo():
+    image = cv.imread("D:/Code/py/OpenCV/src/1.jpg")
+    cv.namedWindow("norm_demo", cv.WINDOW_AUTOSIZE)
+    result = np.zeros_like(np.float32(image))  # 将图片转化为浮点型
+    cv.normalize(np.float32(image), result, 0, 1, cv.NORM_MINMAX, dtype=cv.CV_32F)  # 第二种方法将图片转换为浮点型
+    cv.imshow("norm_demo", np.uint8(result * 255))  # 将图片数据类型还原
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
 if __name__ == "__main__":
-    drawing_demo()
+    norm_demo()
