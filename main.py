@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def read_demo():
@@ -345,5 +346,52 @@ def rotate_demo():
     cv.destroyAllWindows()
 
 
+def video_demo():
+    cap = cv.VideoCapture("D:/Download/迅雷/LEGAL HIGH -SP-01.mkv")
+    w = cap.get(cv.CAP_PROP_FRAME_WIDTH)  # 获取视频的宽
+    h = cap.get(cv.CAP_PROP_FRAME_HEIGHT)  # 获取视频的高
+    fps = cap.get(cv.CAP_PROP_FPS)  # 获取视频的帧数
+    print(w, h, fps)
+    while True:
+        ret, frame = cap.read()
+        # frame = cv.flip(frame, 1)  # 将图像翻转
+        if ret is True:
+            cv.imshow("frame", frame)
+            c = cv.waitKey(30)
+            if c == 27:
+                break
+    cv.destroyAllWindows()
+
+
+def image_hist():
+    image = cv.imread("D:/Code/py/OpenCV/src/1.jpg")
+    cv.imshow("image", image)
+    color = ("blue", "green", "red")
+    for i, color in enumerate(color):  # 将数据对象组合为一个索引序列
+        hist = cv.calcHist([image], [i], None, [256], [0, 256])
+        print(hist)
+        plt.plot(hist, color=color)
+        plt.xlim([0, 256])
+    plt.show()
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
+def hist2d_demo():
+    image = cv.imread("D:/Code/py/OpenCV/src/1.jpg")
+    hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
+    hist = cv.calcHist([hsv], [0, 1], None, [48, 48], [0, 180, 0, 256])
+    dst = cv.resize(hist, (400, 400))
+    cv.normalize(dst, dst, 0, 255, cv.NORM_MINMAX)
+    cv.imshow("image", image)
+    dst = cv.applyColorMap(np.uint8(dst), cv.COLORMAP_JET)
+    cv.imshow("hist", dst)
+    plt.imshow(hist, interpolation='nearest')
+    plt.title("2D Histogram")
+    plt.show()
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+
 if __name__ == "__main__":
-    rotate_demo()
+    hist2d_demo()
